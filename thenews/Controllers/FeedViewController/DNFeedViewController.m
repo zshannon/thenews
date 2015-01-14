@@ -79,6 +79,8 @@ static NSString *CellIdentifier = @"DNFeedCell";
     [self.view addSubview:self.emptyStateView];
 }
 
+
+
 #pragma mark - Table View Data Source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -318,6 +320,33 @@ static NSString *CellIdentifier = @"DNFeedCell";
 
     [self refreshFeed];
     return type;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		 // UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+		 // do whatever
+	 } completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
+	 {
+		 CGFloat navBarHeight = 64.0;
+		 CGSize screenSize = self.view.frame.size;
+		 
+		 CGRect contentViewFrame = CGRectMake(0, navBarHeight, screenSize.width, screenSize.height - navBarHeight);
+		 
+		 [self.feedView setFrame:contentViewFrame];
+		 [self.feedView reloadData];
+		 [self.emptyStateView setFrame:contentViewFrame];
+		 [self.emptyStateView configureSubviews];
+		 
+		 TNRefreshView *pulling = [[TNRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60) state:TNRefreshStatePulling];
+		 TNRefreshView *loading = [[TNRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60) state:TNRefreshStateLoading];
+		 
+		 [[self.feedView pullToRefreshView] setCustomView:pulling forState:SVPullToRefreshStateAll];
+		 [[self.feedView pullToRefreshView] setCustomView:loading forState:SVPullToRefreshStateLoading];
+	 }];
+	
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 @end

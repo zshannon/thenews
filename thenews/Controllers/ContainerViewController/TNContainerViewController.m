@@ -380,4 +380,22 @@ UIImageView *navBarHairlineImageView;
     }
     return nil;
 }
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context)
+	 {
+		 UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+		 // do whatever
+	 } completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
+	 {
+		 CGFloat navBarHeight = 64.0;
+		 CGSize screenSize = self.view.frame.size;
+
+		 [self.navBar setFrame:CGRectMake(0, 0, screenSize.width, navBarHeight)];
+	 }];
+	
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
 @end
