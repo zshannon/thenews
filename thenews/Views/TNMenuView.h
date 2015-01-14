@@ -21,6 +21,7 @@
 - (void)setup;
 - (void)toDefaultState;
 - (void)moveIndicatorTo:(int)index;
+- (void)relayout;
 
 @end
 

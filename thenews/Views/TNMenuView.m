@@ -223,4 +223,23 @@
     [self.searchField setRightView:cancelSearch];
 }
 
+- (void)relayout {
+	CGSize viewSize = self.frame.size;
+	// Visit all subviews to find buttons, and update width
+	for (UIView *subview in self.subviews) {
+		// Buttons are full width; need updating
+		if ([subview isKindOfClass:[UIButton class]]) {
+			[subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, viewSize.width, subview.frame.size.height)];
+		}
+		else if ([subview isKindOfClass:[UIView class]]) {
+			// These are the borders at 1px and 8px height; need updating on width dimension
+			if (subview.frame.size.height == 1 || subview.frame.size.height == 8) {
+				[subview setFrame:CGRectMake(subview.frame.origin.x, subview.frame.origin.y, viewSize.width, subview.frame.size.height)];
+			}
+		}
+	}
+	[self.indicator setFrame:CGRectMake(viewSize.width - 38.5, 20, 10, 10)];
+	[self.searchField setFrame:CGRectMake(40, 150, viewSize.width - 65, 50)];
+}
+
 @end

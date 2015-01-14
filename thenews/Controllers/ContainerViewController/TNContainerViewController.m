@@ -270,7 +270,9 @@ UIImageView *navBarHairlineImageView;
 }
 
 - (void)drawOpenMenuShape {
-
+	// clear out the old
+	[self.openMenuShape removeFromSuperlayer];
+	
     self.openMenuShape = [CAShapeLayer layer];
 
     // Constants to ease drawing the border and the stroke.
@@ -385,7 +387,7 @@ UIImageView *navBarHairlineImageView;
 {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context)
 	 {
-		 UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+		 // UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
 		 // do whatever
 	 } completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
 	 {
@@ -393,6 +395,11 @@ UIImageView *navBarHairlineImageView;
 		 CGSize screenSize = self.view.frame.size;
 
 		 [self.navBar setFrame:CGRectMake(0, 0, screenSize.width, navBarHeight)];
+		 
+		 [self.menu setFrame:CGRectMake(self.menu.frame.origin.x, self.menu.frame.origin.y, screenSize.width, self.menu.frame.size.height)];
+		 [self.menu relayout];
+		 
+		 [self drawOpenMenuShape];
 	 }];
 	
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
