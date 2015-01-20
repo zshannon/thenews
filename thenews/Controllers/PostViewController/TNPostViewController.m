@@ -141,7 +141,8 @@ typedef NS_ENUM (NSInteger, TNToolBarButtonType) {
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];
+	bool iPad = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
+	if (!iPad) [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];
     [self updateToolbarButtonState];
 }
 
@@ -162,7 +163,8 @@ typedef NS_ENUM (NSInteger, TNToolBarButtonType) {
     [self performSelector:@selector(updateTitleLabel) withObject:nil afterDelay:0.5f];
     [self updateToolbarButtonState];
 
-    self.navigationController.scrollNavigationBar.scrollView = self.webView.scrollView;
+	bool iPad = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
+	if (!iPad) self.navigationController.scrollNavigationBar.scrollView = self.webView.scrollView;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
@@ -184,7 +186,8 @@ typedef NS_ENUM (NSInteger, TNToolBarButtonType) {
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
 {
-    [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];
+	bool iPad = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
+	if (!iPad) [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];
 }
 
 #pragma mark - Private Methods
@@ -314,6 +317,20 @@ typedef NS_ENUM (NSInteger, TNToolBarButtonType) {
 
 - (void)setDismissAction:(DismissActionBlock)dismissActionBlock {
     dismissAction = dismissActionBlock;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		// UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+		// do whatever
+	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
+	 {
+		 [self.webView setFrame:self.view.bounds];
+		 [self.navigationController.scrollNavigationBar setFrame:CGRectMake(0, 20, self.view.bounds.size.width, 44)];
+	 }];
+	
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 
